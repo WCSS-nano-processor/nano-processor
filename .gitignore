@@ -1,0 +1,78 @@
+# =========================
+# Vivado Project Files
+# =========================
+*.jou
+*.log
+*.str
+*.xpr
+*.xpr.*
+*.cache/
+*.runs/
+*.hw/
+*.ip_user_files/
+*.Xil/
+*.sim/
+
+# Vivado project settings (optional to ignore)
+*.pb
+*.ipdb
+*.mif
+*.dcp
+
+# =========================
+# Simulation Files
+# =========================
+*.wdb
+*.wcfg
+*.wlf
+*.vcd
+*.vst
+*.asdb
+*.saif
+*.svf
+*.trn
+
+# =========================
+# Build / Output Files
+# =========================
+*.o
+*.out
+*.bin
+*.bit
+*.ltx
+*.rpt
+*.txt
+
+# FPGA Bitstream (IMPORTANT)
+# Uncomment if you DO NOT want to track bitstream
+# *.bit
+# *.bin
+
+# =========================
+# Vivado Reports
+# =========================
+*.rpt
+*.drc
+*.log
+*.xml
+
+# =========================
+# OS / Editor Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Sublime / Vim / Editors
+*.swp
+*.swo
+*.swn
+
+# =========================
+# Backup Files
+# =========================
+*.bak
+*.tmp
+*~
