@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/27/2026 03:45:12 PM
+-- Create Date: 04/27/2026 03:09:56 PM
 -- Design Name: 
--- Module Name: Mux_2way_4bit - Behavioral
+-- Module Name: Reg - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,17 +31,28 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Mux_2way_4bit is
-Port ( Input_0 : in  STD_LOGIC_VECTOR (3 downto 0);
-       Input_1 : in  STD_LOGIC_VECTOR (3 downto 0);
-       Sel     : in  STD_LOGIC;
-       Output  : out STD_LOGIC_VECTOR (3 downto 0));
-end Mux_2way_4bit;
+entity Reg is
+ Port ( D   : in  STD_LOGIC_VECTOR (3 downto 0);
+        Res : in  STD_LOGIC;    -- Asynchronous reset (active high)
+        En  : in  STD_LOGIC;    -- Enable (write enable)
+        Clk : in  STD_LOGIC;
+        Q   : out STD_LOGIC_VECTOR (3 downto 0));
+end Reg;
 
-architecture Behavioral of Mux_2way_4bit is
+architecture Behavioral of Reg is
 
 begin
 
-Output <= Input_0 when Sel = '0' else Input_1;
+process(Clk, Res)
+    begin
+        if Res = '1' then
+            Q <= (others => '0');
+        elsif rising_edge(Clk) then
+            if En = '1' then
+                Q <= D;
+            end if;
+        end if;
+  end process;
+
 
 end Behavioral;

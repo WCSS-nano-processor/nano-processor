@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/27/2026 11:40:47 AM
+-- Create Date: 04/27/2026 03:49:12 PM
 -- Design Name: 
--- Module Name: tb_mux_2way_4bit - Behavioral
+-- Module Name: tb_Mux_2way_4bit - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,70 +31,82 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity tb_mux_2way_4bit is
+entity tb_Mux_2way_4bit is
 --  Port ( );
-end tb_mux_2way_4bit;
+end tb_Mux_2way_4bit;
 
-architecture Behavioral of tb_mux_2way_4bit is
+architecture Behavioral of tb_Mux_2way_4bit is
 
 -- Component declaration
-    component mux_2way_4bit
-        Port ( Sel : in STD_LOGIC;
-               In0 : in STD_LOGIC_VECTOR (3 downto 0);
-               In1 : in STD_LOGIC_VECTOR (3 downto 0);
-               Output : out STD_LOGIC_VECTOR (3 downto 0));
+    component Mux_2way_4bit
+        Port ( Input_0 : in  STD_LOGIC_VECTOR (3 downto 0);
+               Input_1 : in  STD_LOGIC_VECTOR (3 downto 0);
+               Sel     : in  STD_LOGIC;
+               Output  : out STD_LOGIC_VECTOR (3 downto 0));
     end component;
 
     -- Signals
-    signal Sel : STD_LOGIC := '0';
-    signal In0 : STD_LOGIC_VECTOR (3 downto 0) := "0000";
-    signal In1 : STD_LOGIC_VECTOR (3 downto 0) := "0000";
-    signal Output : STD_LOGIC_VECTOR (3 downto 0);
+    signal Input_0 : STD_LOGIC_VECTOR (3 downto 0) := "0000";
+    signal Input_1 : STD_LOGIC_VECTOR (3 downto 0) := "0000";
+    signal Sel     : STD_LOGIC := '0';
+    signal Output  : STD_LOGIC_VECTOR (3 downto 0);
     
+
 begin
 
- -- Instantiate DUT
-    uut: mux_2way_4bit
+-- Instantiate DUT
+    uut: Mux_2way_4bit
         port map (
-            Sel => Sel,
-            In0 => In0,
-            In1 => In1,
-            Output => Output
+            Input_0 => Input_0,
+            Input_1 => Input_1,
+            Sel     => Sel,
+            Output  => Output
         );
 
     -- Stimulus process
     stim_proc: process
     begin
-        -- Test 1: Sel = 0 ? Output = In0
-        Sel <= '0';
-        In0 <= "1010";
-        In1 <= "0101";
-        wait for 10 ns;
-
-        -- Test 2: Sel = 1 ? Output = In1
-        Sel <= '1';
-        wait for 10 ns;
-
-        -- Test 3: Change inputs with Sel = 0
-        Sel <= '0';
-        In0 <= "1111";
-        In1 <= "0000";
-        wait for 10 ns;
-
-        -- Test 4: Change inputs with Sel = 1
-        Sel <= '1';
-        wait for 10 ns;
-
-        -- Test 5: Both inputs same
-        In0 <= "1100";
-        In1 <= "1100";
+        -- ? Test 1: Sel = 0 ? Output = Input_0
+        Input_0 <= "1010";
+        Input_1 <= "0101";
         Sel <= '0';
         wait for 10 ns;
 
+        -- ? Test 2: Sel = 1 ? Output = Input_1
         Sel <= '1';
         wait for 10 ns;
 
-        -- Stop simulation
+        -- ? Test 3: Change inputs while Sel = 0
+        Sel <= '0';
+        Input_0 <= "1111";
+        Input_1 <= "0000";
+        wait for 10 ns;
+
+        --? Test 4: Change inputs while Sel = 1
+        Sel <= '1';
+        wait for 10 ns;
+
+        -- ? Test 5: Both inputs equal
+        Input_0 <= "1100";
+        Input_1 <= "1100";
+        Sel <= '0';
+        wait for 10 ns;
+
+        Sel <= '1';
+        wait for 10 ns;
+
+        -- ? Test 6: Rapid switching
+        Input_0 <= "0011";
+        Input_1 <= "1001";
+
+        Sel <= '0'; wait for 5 ns;
+        Sel <= '1'; wait for 5 ns;
+        Sel <= '0'; wait for 5 ns;
+        Sel <= '1'; wait for 5 ns;
+
+        -- End simulation
         wait;
     end process;
+
+
 end Behavioral;

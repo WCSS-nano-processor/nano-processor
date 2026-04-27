@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/27/2026 11:14:21 AM
+-- Create Date: 04/27/2026 02:58:03 PM
 -- Design Name: 
--- Module Name: decoder_3to8 - Behavioral
+-- Module Name: Decoder_3to8 - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -24,27 +24,26 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity decoder_3to8 is
-    Port ( A : in STD_LOGIC_VECTOR (2 downto 0);
-           EN : in STD_LOGIC;
-           Y : out STD_LOGIC_VECTOR (7 downto 0));
-end decoder_3to8;
+entity Decoder_3to8 is
+Port ( I  : in  STD_LOGIC_VECTOR (2 downto 0);
+       EN : in  STD_LOGIC;
+       Y  : out STD_LOGIC_VECTOR (7 downto 0));
+end Decoder_3to8;
 
-architecture Behavioral of decoder_3to8 is
+architecture Behavioral of Decoder_3to8 is
 
 begin
-
- process(A, EN)
+process(I, EN)
     begin
-        if EN = '1' then
-            case A is
+    if EN = '1' then
+            case I is
                 when "000" => Y <= "00000001";
                 when "001" => Y <= "00000010";
                 when "010" => Y <= "00000100";

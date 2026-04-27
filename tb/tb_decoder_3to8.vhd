@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/27/2026 11:17:56 AM
+-- Create Date: 04/27/2026 03:03:16 PM
 -- Design Name: 
--- Module Name: tb_decoder_3to8 - Behavioral
+-- Module Name: tb_Decoder_3to8 - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -24,66 +24,56 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
-use IEEE.NUMERIC_STD.ALL;
+--use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity tb_decoder_3to8 is
+entity tb_Decoder_3to8 is
 --  Port ( );
-end tb_decoder_3to8;
+end tb_Decoder_3to8;
 
-architecture Behavioral of tb_decoder_3to8 is
+architecture Behavioral of tb_Decoder_3to8 is
 
--- Component declaration
-    component decoder_3to8
-        Port ( A  : in STD_LOGIC_VECTOR (2 downto 0);
-               EN : in STD_LOGIC;
+component Decoder_3to8
+        Port ( I  : in  STD_LOGIC_VECTOR (2 downto 0);
+               EN : in  STD_LOGIC;
                Y  : out STD_LOGIC_VECTOR (7 downto 0));
-    end component;
-
-    -- Signals to connect to DUT (Device Under Test)
-    signal A  : STD_LOGIC_VECTOR (2 downto 0) := "000";
-    signal EN : STD_LOGIC := '0';
-    signal Y  : STD_LOGIC_VECTOR (7 downto 0);
+end component;
+    
+signal I  : STD_LOGIC_VECTOR (2 downto 0) := "000";
+signal EN : STD_LOGIC := '0';
+signal Y  : STD_LOGIC_VECTOR (7 downto 0);
 
 begin
-
--- Instantiate the DUT
-    uut: decoder_3to8
-        port map (
-            A  => A,
-            EN => EN,
-            Y  => Y
-        );
-
-    -- Stimulus process
-    stim_proc: process
-    begin
-        -- Test with EN = 0 (all outputs should be 0)
-        EN <= '0';
-        for i in 0 to 7 loop
-            A <= std_logic_vector(to_unsigned(i, 3));
-            wait for 10 ns;
-        end loop;
-
-        -- Enable decoder
-        EN <= '1';
-        for i in 0 to 7 loop
-            A <= std_logic_vector(to_unsigned(i, 3));
-            wait for 10 ns;
-        end loop;
-
-        -- Disable again
-        EN <= '0';
-        A <= "101";
-        wait for 10 ns;
-
-        -- Stop simulation
-        wait;
-    end process;
-
-
+ UUT: Decoder_3to8 port map (I => I, EN => EN, Y => Y);
+   
+   process
+   begin
+       -- Test all inputs with EN = 0 (disabled)
+       EN <= '0';
+       I <= "000"; wait for 20 ns;
+       I <= "001"; wait for 20 ns;
+       I <= "010"; wait for 20 ns;
+       I <= "011"; wait for 20 ns;
+       I <= "100"; wait for 20 ns;
+       I <= "101"; wait for 20 ns;
+       I <= "110"; wait for 20 ns;
+       I <= "111"; wait for 20 ns;
+       
+       -- Test all inputs with EN = 1 (enabled)
+       EN <= '1';
+       I <= "000"; wait for 20 ns;  
+       I <= "001"; wait for 20 ns;  
+       I <= "010"; wait for 20 ns;  
+       I <= "011"; wait for 20 ns;  
+       I <= "100"; wait for 20 ns;  
+       I <= "101"; wait for 20 ns; 
+       I <= "110"; wait for 20 ns;  
+       I <= "111"; wait for 20 ns;  
+       
+       wait;
+   end process;
 end Behavioral;
