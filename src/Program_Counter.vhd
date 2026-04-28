@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/27/2026 03:09:56 PM
+-- Create Date: 04/28/2026 11:22:44 PM
 -- Design Name: 
--- Module Name: Reg - Behavioral
+-- Module Name: Program_counter - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,7 +21,7 @@
 
 ----------------------------------------------------------------------------------
 -- 3-bit Program Counter with Reset
--- Simple implementation using a single process
+-- Uses D Flip-Flops with asynchronous reset
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -36,18 +36,26 @@ entity Program_Counter is
 end Program_Counter;
 
 architecture Behavioral of Program_Counter is
-    signal pc_reg : ProgramCounter := (others => '0');
+    component Reg
+        port ( D, Res, En, Clk : in STD_LOGIC;
+               Q : out STD_LOGIC);
+    end component;
+    
+    signal pc_reg : ProgramCounter;
+    
 begin
-    process(Clk, Res)
-    begin
-        if Res = '1' then
-            pc_reg <= (others => '0');
-        elsif rising_edge(Clk) then
-            pc_reg <= PC_Next;
-        end if;
-    end process;
+    -- 3-bit register using individual flip-flops
+    GEN_REG: for i in 0 to 2 generate
+        REG_i: entity work.Reg
+            port map (
+                D => PC_Next(i),
+                Res => Res,
+                En => '1',
+                Clk => Clk,
+                Q => pc_reg(i)
+            );
+    end generate;
     
     PC_Current <= pc_reg;
     
 end Behavioral;
-
