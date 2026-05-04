@@ -1,6 +1,5 @@
 ----------------------------------------------------------------------------------
--- Program ROM
--- Stores machine code program
+-- Program ROM - FIXED VERSION
 -- Program: Sum of 1 + 2 + 3 = 6 stored in R7
 ----------------------------------------------------------------------------------
 
@@ -17,26 +16,16 @@ end Program_ROM;
 architecture Behavioral of Program_ROM is
     type instruction_memory_type is array (0 to 7) of std_logic_vector(11 downto 0);
     
-    -- Program: Sum of 1 to 3 = 6 in R7
-    -- Assembly:
-    --   0: MOVI R7, 0
-    --   1: MOVI R1, 1
-    --   2: MOVI R2, 2
-    --   3: MOVI R3, 3
-    --   4: ADD R7, R1
-    --   5: ADD R7, R2
-    --   6: ADD R7, R3
-    --   7: JZR R0, 4  (infinite loop)
-    --
+    -- INSTRUCTIONS IN CORRECT ORDER (PC starts at 0)
     signal program_instructions : instruction_memory_type := (
-        "100010000001",  -- 1: MOVI R1, 1
-        "100100000010",  -- 2: MOVI R2, 2
-        "100110000011",  -- 3: MOVI R3, 3
-        "101110000000",  -- 0: MOVI R7, 0
-        "001110010000",  -- 4: ADD R7, R1
-        "001110100000",  -- 5: ADD R7, R2
-        "001110110000",  -- 6: ADD R7, R3
-        "110000000011"   -- 7: JZR R0, 3
+        "101110000000",  -- 0: MOVI R7, 0     (R7 = 0)
+        "100010000001",  -- 1: MOVI R1, 1     (R1 = 1)
+        "100100000010",  -- 2: MOVI R2, 2     (R2 = 2)
+        "100110000011",  -- 3: MOVI R3, 3     (R3 = 3)
+        "001110010000",  -- 4: ADD R7, R1     (R7 = 0+1 = 1)
+        "001110100000",  -- 5: ADD R7, R2     (R7 = 1+2 = 3)
+        "001110110000",  -- 6: ADD R7, R3     (R7 = 3+3 = 6)
+        "110000000100"   -- 7: JZR R0, 4      (Jump to address 4 - infinite loop)
     );
         
 begin

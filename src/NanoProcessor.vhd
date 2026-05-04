@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- NANOPROCESSOR TOP MODULE
--- Complete 4-bit processor with ADD, SUB, MOVI, NEG, JZR instructions
+-- NANOPROCESSOR TOP MODULE - UPDATED with Display Controller
+-- Complete 4-bit processor with ADD, MOVI, NEG, JZR instructions
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -48,6 +48,7 @@ architecture Structural of NanoProcessor is
     
     -- Components
     component Slow_Clk
+        Generic (SIMULATION_MODE : boolean := true);
         Port ( Clk_in : in STD_LOGIC; Clk_out : out STD_LOGIC);
     end component;
     
@@ -97,15 +98,22 @@ architecture Structural of NanoProcessor is
                Result : out DataBus; Zero_Flag : out STD_LOGIC; Overflow_Flag : out STD_LOGIC);
     end component;
     
-    component LUT_16_7
-        Port ( I : in STD_LOGIC_VECTOR (3 downto 0); O : out STD_LOGIC_VECTOR (6 downto 0));
+    -- NEW: Display Controller component
+    component Display_Controller
+        Port ( clk      : in  STD_LOGIC;
+               Data_in  : in  STD_LOGIC_VECTOR(3 downto 0);
+               seg      : out STD_LOGIC_VECTOR(6 downto 0);
+               an       : out STD_LOGIC_VECTOR(3 downto 0));
     end component;
     
 begin
     s_Res <= Reset;
     
-    -- Slow clock generation (for visual observation)
-    U_SlowClk: Slow_Clk port map (Clk_in => Clock, Clk_out => s_SlowClk);
+    -- Slow clock generation
+    -- Set SIMULATION_MODE => true for simulation, false for hardware
+    U_SlowClk: Slow_Clk 
+        generic map (SIMULATION_MODE => false)  -- Change to false for BASYS3 board
+        port map (Clk_in => Clock, Clk_out => s_SlowClk);
     
     -- Program Counter and sequencing
     U_PC: Program_Counter port map (PC_Next => s_SelectedAddr, Res => s_Res, Clk => s_SlowClk, PC_Current => s_PCCurrent);
@@ -138,8 +146,12 @@ begin
     Zero <= s_Zero;
     Overflow <= s_Overflow;
     
-    -- 7-segment display (shows R7 value)
-    U_7Seg: LUT_16_7 port map (I => s_RegFileOutputs(7), O => S_7Seg);
-    anode <= "1110";  -- Enable only first digit
+    -- NEW: 7-segment display controller (shows R7 value with minus sign)
+    U_Display: Display_Controller port map (
+        clk => Clock,                    -- Fast clock for multiplexing
+        Data_in => s_RegFileOutputs(7),  -- R7 value
+        seg => S_7Seg,
+        an => anode
+    );
     
 end Structural;
